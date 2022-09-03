@@ -8,6 +8,18 @@ export const FavouritesContextProvider = ({ children }) => {
   const { user } = useContext(AuthenticationContext);
   const [favourites, setFavourites] = useState([]);
 
+  useEffect(() => {
+    if (user) {
+      loadFavourites(user.uid);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      saveFavourites(favourites, user.uid);
+    }
+  }, [favourites, user]);
+
   const saveFavourites = async (value, uid) => {
     try {
       const jsonValue = JSON.stringify(value);
@@ -37,18 +49,6 @@ export const FavouritesContextProvider = ({ children }) => {
       (x) => x.placeId !== restaurant.placeId
     );
     setFavourites(newFavourites);
-
-    useEffect(() => {
-      if (user) {
-        loadFavourites(user.uid);
-      }
-    }, [user]);
-
-    useEffect(() => {
-      if (user) {
-        saveFavourites(favourites, user.uid);
-      }
-    }, [favourites, user]);
   };
   return (
     <FavouritesContext.Provider
